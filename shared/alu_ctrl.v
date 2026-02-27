@@ -1,21 +1,12 @@
-module alu_ctrl(funct3, funct7, alu_ctrl_out);
-
+module alu_ctrl(alu_ctrl, funct3, funct7_5);
     input [2:0] funct3;
-    input [6:0] funct7;
-    output reg [2:0] alu_ctrl_out;
+    input funct7_5;
+    output [2:0] alu_ctrl;
 
-
-    always@(*)
-        begin
-            case(funct3)
-                    3'b000 : #1 alu_ctrl_out = funct7[5] ? 3'b000 : 3'b001;
-                    3'b111 : #1 alu_ctrl_out = 3'b010;
-                    3'b110 : #1 alu_ctrl_out = 3'b011;
-                    3'b001 : #1 alu_ctrl_out = 3'b100;
-                    3'b010 : #1 alu_ctrl_out = 3'b110;
-
-                    default : #1 alu_ctrl_out = 3'b001;
-            endcase
-        end
-
+    assign #1 alu_ctrl = (funct3 == 3'b000 && funct7_5 == 1'b0) ? 3'b001 :
+                         (funct3 == 3'b000 && funct7_5 == 1'b1) ? 3'b000 :
+                         (funct3 == 3'b111) ? 3'b010 :
+                         (funct3 == 3'b110) ? 3'b011 :
+                         (funct3 == 3'b001) ? 3'b100 :
+                         (funct3 == 3'b010) ? 3'b110 : 3'b000;
 endmodule
